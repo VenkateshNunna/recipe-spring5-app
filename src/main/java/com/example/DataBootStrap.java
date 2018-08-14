@@ -49,7 +49,7 @@ public class DataBootStrap implements ApplicationListener<ContextRefreshedEvent>
 		
 		log.debug("initData is called");
 		Recipe guacamole = new Recipe();
-		guacamole.setDescription("Guacamole, a dip made from avocados, is originally from Mexico. The name is derived from two Aztec Nahuatl words—ahuacatl (avocado) and molli (sauce).");
+		guacamole.setDescription("Perfect Guacamole");
 		guacamole.setPrepTime(10);
 		guacamole.setCookTime(10);
 		guacamole.setDifficulty(Difficulty.MEDIUM);
@@ -153,7 +153,7 @@ public class DataBootStrap implements ApplicationListener<ContextRefreshedEvent>
 		recipeRepository.save(guacamole);
 		
 		Recipe grilledChicken = new Recipe();
-		grilledChicken.setDescription("Spicy grilled chicken tacos! Quick marinade, then grill. Ready in about 30 minutes. Great for a quick weeknight dinner, backyard cookouts, and tailgate parties.");
+		grilledChicken.setDescription("Spicy grilled chicken tacos!");
 		grilledChicken.setPrepTime(20);
 		grilledChicken.setCookTime(15);
 		grilledChicken.setDifficulty(Difficulty.EASY);
