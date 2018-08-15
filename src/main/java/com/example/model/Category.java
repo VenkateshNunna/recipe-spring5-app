@@ -13,6 +13,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
+
 @Entity
 @Data
 @EqualsAndHashCode(exclude= {"recipies"})

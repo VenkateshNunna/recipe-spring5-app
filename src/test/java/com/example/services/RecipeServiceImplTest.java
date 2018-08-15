@@ -1,12 +1,12 @@
 package com.example.services;
 
-import static org.hamcrest.CoreMatchers.any;
-import static org.hamcrest.CoreMatchers.anything;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 
 import java.util.Optional;
 
@@ -16,6 +16,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import com.example.commands.RecipeCommand;
+import com.example.convert.RecipeToRecipeCommand;
 import com.example.model.Recipe;
 import com.example.repositories.RecipeRepository;
 
@@ -23,6 +25,8 @@ public class RecipeServiceImplTest {
 	
 	@Mock
 	RecipeRepository recipeRepository;
+	@Mock
+	RecipeToRecipeCommand recipeToRecipeCommand;
 	
 	@InjectMocks
 	RecipeServiceImpl recipeServiceImpl;
@@ -40,10 +44,10 @@ public class RecipeServiceImplTest {
 		
 		Optional<Recipe> recipeOptional = Optional.of(recipe);
 		
-		 when(recipeRepository.findById(1L)).thenReturn(recipeOptional);
-
+		 when(recipeRepository.findById(anyLong())).thenReturn(recipeOptional);
+		 when(recipeToRecipeCommand.convert(any())).thenReturn(new RecipeCommand());
 		
-		Recipe recipeReturned = recipeServiceImpl.findById(1L);
+		RecipeCommand recipeReturned = recipeServiceImpl.findById(1L);
 		
 		assertNotNull("Null recipe Returned", recipeReturned);
 		verify(recipeRepository, times(1)).findById(1L);
@@ -51,5 +55,16 @@ public class RecipeServiceImplTest {
 		
 		
 	}
-
+	
+	@Test
+	public void testDeleteById() {
+		
+		recipeServiceImpl.deleteById(2L);
+		
+		verify(recipeRepository, times(1)).deleteById(anyLong());
+		
+		
+		
+	}
+	
 }
