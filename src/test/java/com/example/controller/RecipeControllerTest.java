@@ -16,6 +16,7 @@ import java.net.URISyntaxException;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -26,6 +27,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 
 import com.example.commands.RecipeCommand;
+import com.example.exceptions.NotFoundException;
 import com.example.model.Recipe;
 import com.example.services.RecipeService;
 
@@ -58,6 +60,17 @@ public class RecipeControllerTest {
 		.andExpect(view().name("recipe/show"));
 		
 		
+	}
+	
+	@Test
+	public void testGetRecipeByIdNotFound() throws Exception {
+		
+		when(recipeService.findById(ArgumentMatchers.anyLong())).thenThrow(NotFoundException.class);
+		
+		mockMvc.perform(get("/recipe/1/show"))
+			.andExpect(status().isNotFound())
+			.andExpect(view().name("404error"))
+			.andExpect(model().attributeExists("exception"));
 	}
 	
 	@Test
@@ -99,5 +112,6 @@ public class RecipeControllerTest {
 		verify(recipeService, times(1)).deleteById(anyLong());
 		
 	}
+	
 
 }

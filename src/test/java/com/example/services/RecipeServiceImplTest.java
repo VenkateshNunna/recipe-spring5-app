@@ -12,12 +12,14 @@ import java.util.Optional;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import com.example.commands.RecipeCommand;
 import com.example.convert.RecipeToRecipeCommand;
+import com.example.exceptions.NotFoundException;
 import com.example.model.Recipe;
 import com.example.repositories.RecipeRepository;
 
@@ -52,6 +54,20 @@ public class RecipeServiceImplTest {
 		assertNotNull("Null recipe Returned", recipeReturned);
 		verify(recipeRepository, times(1)).findById(1L);
 		verify(recipeRepository, never()).findAll();
+		
+		
+	}
+	
+	@Test(expected=NotFoundException.class)
+	public void testGetRecipeByIdNotFound() {
+		Optional<Recipe> recipeOptional = Optional.empty();
+		
+		when(recipeRepository.findById(ArgumentMatchers.anyLong())).thenReturn(recipeOptional);
+		
+		recipeServiceImpl.findById(1L);
+		
+		verify(recipeRepository,times(1)).findById(ArgumentMatchers.anyLong());
+		
 		
 		
 	}

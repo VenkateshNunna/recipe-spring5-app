@@ -3,12 +3,14 @@ package com.example.services;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.commands.IngredientCommand;
 import com.example.convert.IngredientCommandToIngredient;
 import com.example.convert.IngredientToIngredientCommand;
 import com.example.model.Ingredient;
 import com.example.model.Recipe;
+import com.example.repositories.IngredientRepository;
 import com.example.repositories.RecipeRepository;
 import com.example.repositories.UnitOfMeasureRepository;
 
@@ -114,6 +116,40 @@ public class IngredientServiceImpl implements IngredientService {
 			return converter.convert(savedIngredient.get());
 												
 		}
+		
+	}
+
+	@Override
+	@Transactional
+	public void deleteByRecipeIdAndIngredientId(Long recipeId, Long ingredientId) {
+		
+		Optional<Recipe> recipeOptional = recipeRepository.findById(recipeId);
+		
+		if(recipeOptional.isPresent()) {
+			
+			Recipe recipe = recipeOptional.get();
+			System.out.println("Recipe is present");
+			Optional<Ingredient> ingredientOptional = recipe.getIngredients()
+										.stream()
+										.filter(ingredient -> ingredient.getId().equals(ingredientId))
+										.findFirst();
+			if(ingredientOptional.isPresent()) {
+				Ingredient ingredient = ingredientOptional.get();
+				System.out.println("Ingredient present");
+				ingredient.setRecipe(null);
+				recipe.getIngredients().remove(ingredient);
+				recipeRepository.save(recipe);
+				
+				
+			}
+			else {
+				throw new RuntimeException("Ingredient is not found");
+			}
+		}
+		else {
+			throw new RuntimeException("Recipe is not found");
+		}
+		
 		
 	}
 

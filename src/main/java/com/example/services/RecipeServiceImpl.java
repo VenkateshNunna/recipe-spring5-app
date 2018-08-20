@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.example.commands.RecipeCommand;
 import com.example.convert.RecipeCommandToRecipe;
 import com.example.convert.RecipeToRecipeCommand;
+import com.example.exceptions.NotFoundException;
 import com.example.model.Recipe;
 import com.example.repositories.RecipeRepository;
 
@@ -44,7 +45,7 @@ public class RecipeServiceImpl implements RecipeService{
 		Optional<Recipe> recipeOptional = recipeRepository.findById(l);
 		
 		if(!recipeOptional.isPresent()) {
-			throw new RuntimeException("Recipe Not Found");
+			throw new NotFoundException("Recipe Not Found");
 		}
 		RecipeCommand recipeCommand = recipeToRecipeCommand.convert(recipeOptional.get());
 		return recipeCommand;

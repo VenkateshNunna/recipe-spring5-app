@@ -2,13 +2,18 @@ package com.example.controller;
 
 import java.util.Iterator;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.example.commands.RecipeCommand;
+import com.example.exceptions.NotFoundException;
 import com.example.model.Recipe;
 import com.example.repositories.RecipeRepository;
 import com.example.services.RecipeService;
@@ -63,6 +68,17 @@ public class RecipeController {
 		recipeService.deleteById(new Long(id));
 		
 		return "redirect:/";
+	}
+	
+	@ResponseStatus(HttpStatus.NOT_FOUND)
+	@ExceptionHandler(NotFoundException.class)
+	public ModelAndView HandleNotFoundException(Exception e) {
+		
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.setViewName("404error");
+		modelAndView.addObject("exception", e);
+		return modelAndView;
+		
 	}
 	
 }
